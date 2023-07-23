@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Adressess {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  name      String
+  address   String
+  zipCode   String   @map("zip_code")
+  city      String
+  country   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+}
+
+model Orders {
+  id        String      @id @default(uuid())
+  userId    String      @unique @map("user_id")
+  stripeId  String      @map("stripe_id")
+  name      String
+  address   String
+  zipCode   String      @map("zip_code")
+  city      String
+  country   String
+  orderItem OrderItem[]
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @default(now()) @map("updated_at")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  product   Products @relation(fields: [productId], references: [id])
+  productId String   @map("product_id")
+
+  order   Orders? @relation(fields: [orderId], references: [id])
+  orderId String
+
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
+model Products {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  price       Int
+  url         String
+  createdAt   DateTime    @default(now()) @map("created_at")
+  orderItem   OrderItem[]
+}
