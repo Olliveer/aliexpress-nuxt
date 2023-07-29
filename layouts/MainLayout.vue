@@ -148,7 +148,7 @@ watch(
           class="min-w-[170px]"
         >
           <img
-            src="/aliexpress-logo.png"
+            src="/aliExpress-logo.png"
             width="170"
             alt="logo"
           />

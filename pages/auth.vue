@@ -25,7 +25,7 @@ watchEffect(() => {
     >
       <NuxtLink to="/">
         <img
-          src="/aliexpress-logo.png"
+          src="/aliExpress-logo.png"
           alt="logo"
           width="170"
         />
