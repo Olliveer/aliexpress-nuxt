@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Product = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   url: string;
@@ -34,7 +34,7 @@ const oldPriceComputed = computed(() => {
 <template>
   <div
     :id="`ProductComponent${product.id}`"
-    class="bg-white inline-block rounded hover:shadow-md cursor-pointer p-1"
+    class="bg-white inline-block rounded hover:shadow-md cursor-pointer p-1 w-full"
   >
     <NuxtLink :to="`/item/${product.id}`">
       <img

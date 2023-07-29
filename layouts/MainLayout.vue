@@ -1,12 +1,40 @@
 <script setup lang="ts">
-import { useUserStore } from "~/stores/user";
+import { useUserStore } from "~/stores/User";
 
 const userStore = useUserStore();
+
+const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 
 const isAccountMenu = ref(false);
 const searchItem = ref("");
 const isSearching = ref(false);
 const isCartHover = ref(false);
+const items = ref<any>();
+
+const searchByName = useDebounce(async () => {
+  isSearching.value = true;
+
+  items.value = await useFetch(
+    `/api/prisma/search-by-name/${searchItem.value}`
+  );
+
+  isSearching.value = false;
+}, 100);
+
+watch(
+  () => searchItem.value,
+  async () => {
+    if (!searchItem.value) {
+      setTimeout(() => {
+        items.value = "";
+        isSearching.value = false;
+        return;
+      }, 500);
+    }
+    searchByName();
+  }
+);
 </script>
 
 <template>
@@ -75,7 +103,7 @@ const isCartHover = ref(false);
             class="absolute bg-white w-[220px] text-[#333333] -40 top-[38px] -left-[100px] border-b border-x"
             v-if="isAccountMenu"
           >
-            <div v-if="true">
+            <div v-if="!user">
               <div class="text-semibold text-[15px] my-4 px-3">
                 Wellcome to AliExpress!
               </div>
@@ -97,7 +125,8 @@ const isCartHover = ref(false);
                 My Orders
               </li>
               <li
-                v-if="true"
+                v-if="user"
+                @click="supabase.auth.signOut()"
                 class="text-[13px] py-2 px-4 w-full hover:bg-gray-200"
               >
                 Sign Out
@@ -148,55 +177,65 @@ const isCartHover = ref(false);
               />
             </button>
           </div>
-          <div class="absolute bg-white max-w-[700px] h-auto w-full">
+          <div
+            class="absolute bg-white max-w-[700px] h-auto w-full shadow-md rounded"
+          >
             <div
-              v-if="false"
+              v-if="items && items.data"
+              v-for="item in items.data"
+              :key="item.id"
               class="p-1"
             >
               <NuxtLink
-                to="`/item/1`"
+                :to="`/item/${item.id}`"
                 class="flex items-center justify-between w-full cursor-pointer hover:bg-gray-100"
               >
                 <div class="flex items-center">
                   <img
-                    src="https://picsum.photos/200"
+                    :src="item.url"
                     width="40"
                     alt=""
                     class="rounded-md"
                   />
-                  <div class="truncate ml-2">Testing</div>
+                  <div class="truncate ml-2">{{ item.title }}</div>
                 </div>
-                <div class="truncate">$ 99.99</div>
+                <div class="truncate">
+                  {{
+                    item.price.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })
+                  }}
+                </div>
               </NuxtLink>
             </div>
           </div>
         </div>
-      </div>
-
-      <NuxtLink
-        to="/cart"
-        class="flex items-center"
-      >
-        <button
-          type="button"
-          class="relative md:block hidden"
-          @mouseenter="isCartHover = true"
-          @mouseleave="isCartHover = false"
+        <NuxtLink
+          to="/cart"
+          class="flex items-center"
         >
-          <span
-            class="absolute flex items-center justify-center -right-[3px] top-0 bg-[#ff4646] h-[17px] min-w-[17px] text-xs text-white px-0.5 rounded-full"
+          <button
+            type="button"
+            class="relative md:block hidden"
+            @mouseenter="isCartHover = true"
+            @mouseleave="isCartHover = false"
           >
-            0
-          </span>
-          <div class="min-w-[40px]">
-            <Icon
-              name="ph:shopping-cart-simple-light"
-              size="33"
-              :color="isCartHover ? '#ff4646' : ''"
-            />
-          </div>
-        </button>
-      </NuxtLink>
+            <span
+              class="absolute flex items-center justify-center -right-[3px] top-0 bg-[#ff4646] h-[17px] min-w-[17px] text-xs text-white px-0.5 rounded-full"
+            >
+              {{ userStore.cart.length }}
+            </span>
+            <div class="min-w-[40px]">
+              <Icon
+                name="ph:shopping-cart-simple-light"
+                size="33"
+                :color="isCartHover ? '#ff4646' : ''"
+              />
+            </div>
+          </button>
+        </NuxtLink>
+      </div>
 
       <button
         @click="userStore.isMenuOverlay = true"

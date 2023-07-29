@@ -9,7 +9,7 @@
     "postinstall": "nuxt prepare"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.ts"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@nuxtjs/supabase": "^0.3.8",
-   
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "^0.4.11",
     "@prisma/client": "^5.0.0",
