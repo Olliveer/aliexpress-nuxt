@@ -153,7 +153,6 @@ function showError(error: string) {
 watch(
   () => total.value,
   () => {
-    console.log(total.value);
     if (total.value > 0) {
       stripeInit();
     }
