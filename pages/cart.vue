@@ -57,10 +57,6 @@ function goToCheckout() {
 
   return navigateTo("/checkout");
 }
-
-onMounted(() => {
-  setTimeout(() => (userStore.isLoading = false), 200);
-});
 </script>
 
 <template>
@@ -101,20 +97,22 @@ onMounted(() => {
         class="md:flex gap-4 justify-between mx-auto w-full"
       >
         <div class="md:w-[65%]">
-          <div class="bg-white rounded-lg p-4">
+          <div
+            class="bg-white dark:bg-zinc-900 dark:text-gray-200 rounded-lg p-4"
+          >
             <div class="text-2xl font-bold mb-2">
               Shopping Cart ({{ userStore.cart.length }})
             </div>
           </div>
 
-          <div class="bg-[#feeeef] rounded-lg p-4 mt-4">
-            <div class="text-red-500 font-bold">
+          <div class="bg-[#feeeef] dark:bg-zinc-700 rounded-lg p-4 mt-4">
+            <div class="text-red-500 dark:text-gray-200 font-bold">
               Welcome Deal applicable on 1 item only
             </div>
 
             <div
               id="Items"
-              class="bg-white rounded-lg p-4 mt-4"
+              class="bg-white dark:bg-zinc-800 rounded-lg p-4 mt-4"
             >
               <div
                 v-for="product in userStore.cart"
@@ -132,10 +130,10 @@ onMounted(() => {
         </div>
         <div class="md:hidden block my-4"></div>
 
-        <div class="md:w-[35%]">
+        <div class="md:w-[35%] dark:text-gray-200">
           <div
             id="Summary"
-            class="bg-white rounded-lg p-4"
+            class="bg-white dark:bg-zinc-900 rounded-lg p-4"
           >
             <div class="text-2xl font-extrabold mb-2">Summary</div>
 
@@ -164,7 +162,7 @@ onMounted(() => {
 
           <div
             id="PaymentProtection"
-            class="bg-white rounded-lg p-4 mt-4"
+            class="bg-white dark:bg-zinc-900 rounded-lg p-4 mt-4"
           >
             <div class="text-lg font-semibold mb-2">Payment methods</div>
             <div class="flex items-center justify-start gap-8 my-4">

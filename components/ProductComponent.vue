@@ -34,7 +34,7 @@ const oldPriceComputed = computed(() => {
 <template>
   <div
     :id="`ProductComponent${product.id}`"
-    class="bg-white inline-block rounded hover:shadow-md cursor-pointer p-1 w-full"
+    class="bg-white dark:bg-zinc-900 inline-block rounded hover:shadow-md cursor-pointer p-1 w-full"
   >
     <NuxtLink :to="`/item/${product.id}`">
       <img
@@ -48,7 +48,9 @@ const oldPriceComputed = computed(() => {
           <span class="text-[#ff6674] font-semibold">
             {{ priceComputed }}
           </span>
-          <span class="text-gray-500 text-sm text-light line-through">
+          <span
+            class="text-gray-500 dark:text-gray-200 text-sm text-light line-through"
+          >
             {{ oldPriceComputed }}
           </span>
         </span>
@@ -72,17 +74,18 @@ const oldPriceComputed = computed(() => {
           </span>
         </div>
 
-        <p class="flex items-center px-1 pt-0.5 text-xs text-[#252525]">
+        <p
+          class="flex items-center px-1 pt-0.5 text-xs text-[#252525] dark:text-gray-200"
+        >
           5,000 sold
           <Icon
             name="material-symbols:star-rate"
-            color="#757575"
-            class="ml-1.5"
+            class="ml-1.5 dark:text-yellow-300"
           />
           4.7
         </p>
 
-        <p class="px-1 pt-0.5 text-xs text-[#252525]">
+        <p class="px-1 pt-0.5 text-xs text-[#252525] dark:text-gray-200">
           {{ product.title.substring(0, 60) }}
         </p>
 

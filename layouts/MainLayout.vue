@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "~/stores/User";
+const colorMode = useColorMode();
 
 const userStore = useUserStore();
 
@@ -21,6 +22,11 @@ const searchByName = useDebounce(async () => {
 
   isSearching.value = false;
 }, 100);
+
+function handleToggleTheme(theme: string) {
+  colorMode.value = theme;
+  localStorage.setItem("theme", theme);
+}
 
 watch(
   () => searchItem.value,
@@ -44,10 +50,10 @@ watch(
   >
     <div
       id="TopMenu"
-      class="w-full bg-[#fafafa] border-b md:block hidden"
+      class="w-full bg-[#fafafa] dark:bg-zinc-900 border-b dark:border-b-zinc-600 md:block hidden"
     >
       <ul
-        class="flex items-center justify-end text-xs text-[#333333] font-light px-2 h-10 bg-[#fafafa] max-w-[1200px]"
+        class="flex items-center justify-end text-xs text-[#333333] dark:text-gray-200 font-light px-2 h-10 max-w-[1200px]"
       >
         <li
           class="border-r border-r-gray-400 px-3 hover:text-[#ff4646] cursor-pointer"
@@ -83,8 +89,8 @@ watch(
           class="relative flex items-center px-2.5 hover:text-[#ff4646] h-full cursor-pointer"
           :class="
             isAccountMenu
-              ? 'bg-white border z-40 shadow-[0_15px_100px_40px_rgba(0,0,0,0.3)]'
-              : 'border border-[#fafafa]'
+              ? 'bg-white dark:bg-zinc-900 border z-40 shadow-[0_15px_100px_40px_rgba(0,0,0,0.3)]'
+              : 'border border-[#fafafa] dark:border-zinc-500'
           "
         >
           <Icon
@@ -100,7 +106,7 @@ watch(
 
           <div
             id="AccountMenu"
-            class="absolute bg-white w-[220px] text-[#333333] -40 top-[38px] -left-[100px] border-b border-x"
+            class="absolute bg-white w-[220px] dark:bg-zinc-900 text-[#333333] dark:text-gray-200 -40 top-[38px] -left-[100px] border-b border-x dark:border-zinc-900 rounded-sm shadow-sm"
             v-if="isAccountMenu"
           >
             <div v-if="!user">
@@ -117,28 +123,44 @@ watch(
               </div>
             </div>
             <div class="border-b" />
-            <ul class="bg-white">
+            <ul class="bg-white dark:bg-gray-950">
               <li
                 @click="navigateTo('/orders')"
-                class="text-[13px] py-2 px-4 w-full hover:bg-gray-200"
+                class="text-[13px] py-2 px-4 w-full hover:bg-gray-200 dark:hover:bg-transparent dark:hover:text-[#ff4646]"
               >
                 My Orders
               </li>
+
               <li
                 v-if="user"
                 @click="supabase.auth.signOut()"
-                class="text-[13px] py-2 px-4 w-full hover:bg-gray-200"
+                class="text-[13px] py-2 px-4 w-full hover:bg-gray-200 dark:hover:bg-transparent dark:hover:text-[#ff4646]"
               >
                 Sign Out
               </li>
             </ul>
           </div>
         </li>
+
+        <li class="px-3">
+          <Icon
+            v-if="colorMode.value === 'light'"
+            name="ph:sun"
+            size="20"
+            @click="handleToggleTheme('dark')"
+          />
+          <Icon
+            v-else
+            name="ph:moon-stars"
+            size="20"
+            @click="handleToggleTheme('light')"
+          />
+        </li>
       </ul>
     </div>
     <div
       id="MainHeader"
-      class="flex items-center w-full bg-white"
+      class="flex items-center w-full bg-white dark:bg-zinc-900"
     >
       <div
         class="flex lg:justify-start justify-between gap-10 max-w-[1150px] w-full px-3 py-5 mx-auto"
@@ -158,7 +180,7 @@ watch(
             class="flex items-center border-2 border-[#ff4646] rounded-md w-full"
           >
             <input
-              class="w-full placeholder-gray-400 text-sm pl-3 focus:outline-none"
+              class="w-full dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-200 text-sm pl-3 dark:bg-zinc-900 focus:outline-none"
               placeholder="Kitchen acessories"
               type="text"
               v-model="searchItem"
@@ -178,7 +200,7 @@ watch(
             </button>
           </div>
           <div
-            class="absolute bg-white max-w-[700px] h-auto w-full shadow-md rounded"
+            class="absolute bg-white dark:bg-zinc-900 dark:text-gray-200 max-w-[700px] h-auto w-full shadow-md rounded"
           >
             <div
               v-if="items && items.data"
@@ -188,7 +210,7 @@ watch(
             >
               <NuxtLink
                 :to="`/item/${item.id}`"
-                class="flex items-center justify-between w-full cursor-pointer hover:bg-gray-100"
+                class="flex items-center justify-between w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700"
               >
                 <div class="flex items-center">
                   <img
@@ -231,6 +253,7 @@ watch(
                 name="ph:shopping-cart-simple-light"
                 size="33"
                 :color="isCartHover ? '#ff4646' : ''"
+                class="text-black dark:text-white"
               />
             </div>
           </button>
@@ -244,15 +267,14 @@ watch(
         <Icon
           name="radix-icons:hamburger-menu"
           size="33"
+          class="dark:text-gray-200"
         />
       </button>
     </div>
   </div>
 
-  <Loading v-if="userStore.isLoading" />
-
   <div class="lg:pt-[150px] md:pt-[130px] pt-[80px]"></div>
   <slot />
 
-  <Footer v-if="!userStore.isLoading" />
+  <Footer />
 </template>

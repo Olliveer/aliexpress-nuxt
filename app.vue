@@ -34,7 +34,9 @@ watch(
 </script>
 
 <template>
-  <div class="fixed z-[-1] bg-[#f2f2f2] w-full h-screen"></div>
+  <div
+    class="fixed z-[-1] bg-[#f2f2f2] dark:bg-zinc-800 transition-colors duration-300 w-full h-screen"
+  ></div>
   <NuxtPage />
 
   <MenuOverlay

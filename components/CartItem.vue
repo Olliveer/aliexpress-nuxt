@@ -46,7 +46,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex justify-start my-2">
+  <div class="flex justify-start my-2 dark:text-gray-200">
     <div class="my-auto">
       <div
         @mouseenter="isHover = true"

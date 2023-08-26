@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from "../../stores/User";
 import MainLayout from "../../layouts/MainLayout.vue";
-import { Products } from "@prisma/client";
-
-type ProductData = {
-  data: Products | null;
-};
+import Loading from "../../components/Loading.vue";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -21,16 +17,25 @@ const images = ref([
   "https://picsum.photos/id/14/800/800",
   "https://picsum.photos/id/15/800/800",
 ]);
-const product = ref<ProductData | null>(null);
 
-onBeforeMount(async () => {
-  product.value = (await useFetch(
-    `/api/prisma/get-product-by-id/${route.params.id}`
-  )) as any;
-});
+const { data, pending } = await useFetch(
+  `/api/prisma/get-product-by-id/${route.params.id}`,
+  {
+    lazy: true,
+  }
+);
 
 function addToCart() {
-  userStore.cart.push(product.value!.data!);
+  if (data.value) {
+    userStore.cart.push({
+      id: data.value?.id,
+      title: data.value?.title,
+      description: data.value?.description,
+      url: data.value?.url,
+      price: data.value?.price,
+    });
+  }
+  return;
 }
 
 const isInCart = computed(() => {
@@ -38,8 +43,8 @@ const isInCart = computed(() => {
 });
 
 const priceComputed = computed(() => {
-  if (product.value && product.value.data) {
-    return product.value.data.price.toLocaleString("en-US", {
+  if (data.value) {
+    return data.value.price.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
     });
@@ -48,16 +53,16 @@ const priceComputed = computed(() => {
 });
 
 watchEffect(() => {
-  if (product.value && product.value.data) {
-    currentImage.value = product.value.data.url;
-    images.value[0] = product.value.data.url;
-    userStore.isLoading = false;
+  if (data.value) {
+    currentImage.value = data.value.url;
+    images.value[0] = data.value.url;
   }
 });
 </script>
 
 <template>
   <MainLayout>
+    <Loading :loading="pending" />
     <div
       id="ItemPage"
       class="mt-4 max-w-[1200px] mx-auto px-2"
@@ -82,24 +87,26 @@ watchEffect(() => {
               <img
                 @mouseover="currentImage = image"
                 @click="currentImage = image"
-                width="70"
+                width="65"
                 :src="image"
                 alt="Item"
-                class="rounded-md object-fit border-[3px] cursor-pointer"
+                class="rounded-md object-fit border-[1px] mr-1 cursor-pointer"
                 :class="currentImage === image ? 'border-[#ff5353]' : ''"
               />
             </div>
           </div>
         </div>
 
-        <div class="md:w-[60%] bg-white p-3 rounded-lg">
+        <div
+          class="md:w-[60%] bg-white dark:bg-zinc-700 p-3 rounded-lg text-black dark:text-gray-200"
+        >
           <div
-            v-if="product && product.data"
+            v-if="data"
             class=""
           >
-            <p class="mb-2">{{ product.data.title }}</p>
+            <p class="mb-2">{{ data.title }}</p>
             <p class="font-light text-[12px] mb-2">
-              {{ product.data.description }}
+              {{ data.description }}
             </p>
           </div>
           <div class="flex items-center pt-1.5">

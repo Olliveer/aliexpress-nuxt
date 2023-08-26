@@ -15,9 +15,11 @@ onMounted(() => {
   <MainLayout>
     <div
       id="SuccessPage"
-      class="mt-4 max-w-[1200px] mx-auto px-2 min-h-[50vh]"
+      class="mt-4 max-w-[1200px] mx-auto px-2 min-h-[50vh] rounded-sm"
     >
-      <div class="bg-white w-full p-6 min-h-[150px]">
+      <div
+        class="bg-white dark:bg-zinc-900 dark:text-gray-200 w-full p-6 min-h-[150px]"
+      >
         <div class="flex items-center text-xl">
           <Icon
             name="clarity:success-standard-line"

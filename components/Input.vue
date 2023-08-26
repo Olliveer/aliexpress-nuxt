@@ -23,13 +23,13 @@ const inputComputed = computed({
   <div>
     <ClientOnly>
       <input
-        class="w-full bg-white text-gray-800 border text-sm border-[#eff0eb] rounded-lg p-3 placeholder-gray-500 focus:outline-none"
+        class="w-full bg-white dark:bg-zinc-900 text-gray-800 dark:text-gray-200 border text-sm border-[#eff0eb] rounded-lg p-3 placeholder-gray-500 dark:placeholder-gray-200 focus:outline-none"
         :placeholder="placeholder"
         :maxlength="max"
         @focus="isFocused = true"
         @blur="isFocused = false"
         :class="{
-          'border-gray-900': isFocused,
+          'border-gray-900 dark:border-gray-200': isFocused,
           'border-red-500': error,
         }"
         v-model="inputComputed"

@@ -118,7 +118,9 @@ watchEffect(async () => {
       id="AddressPage"
       class="mt-4 max-w-[500px] mx-auto px-2"
     >
-      <div class="mx-auto bg-white rounded-lg p-3">
+      <div
+        class="mx-auto bg-white dark:bg-zinc-900 dark:text-gray-200 rounded-lg p-3"
+      >
         <div class="text-xl text-bold mb-2">Address Details</div>
 
         <form @submit.prevent="handleSaveAddress">

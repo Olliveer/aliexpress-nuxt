@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/supabase",
+    "@nuxtjs/color-mode",
   ],
   runtimeConfig: {
     public: {
@@ -25,5 +26,14 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+  supabase: {
+    redirect: false,
+  },
+  experimental: {
+    headNext: true,
+  },
+  colorMode: {
+    classSuffix: "",
   },
 });
