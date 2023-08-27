@@ -24,7 +24,7 @@ const searchByName = useDebounce(async () => {
 }, 100);
 
 function handleToggleTheme(theme: string) {
-  colorMode.value = theme;
+  colorMode.preference = theme;
   localStorage.setItem("theme", theme);
 }
 

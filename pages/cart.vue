@@ -67,7 +67,7 @@ function goToCheckout() {
     >
       <div
         v-if="!userStore.cart.length"
-        class="h-[500px] flex items-center justify-center"
+        class="h-[500px] flex items-center justify-center dark:text-gray-200"
       >
         <div class="pt-20">
           <img
